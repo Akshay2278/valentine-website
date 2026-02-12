@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Input</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Video Background */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /* Center Container */
+    .center-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    /* Valentine's Heading */
+    h1 {
+      color: #ff1493;
+      margin-bottom: 30px;
+      font-size: 48px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      font-family: 'Cursive', sans-serif;
+    }
+
+    /* Input Container with Hearts */
+    .input-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Input Styling */
+    .input-box {
+      padding: 20px 30px;
+      font-size: 18px;
+      border: 3px solid #ff69b4;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #ff1493;
+      outline: none;
+      width: 450px;
+      box-shadow: 0 8px 32px rgba(255, 20, 147, 0.3);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .input-box::placeholder {
+      color: #ff69b4;
+    }
+
+    .input-box:focus {
+      border-color: #ff1493;
+      box-shadow: 0 8px 32px rgba(255, 20, 147, 0.5);
+      transform: scale(1.02);
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      padding: 15px 50px;
+      font-size: 20px;
+      background: linear-gradient(135deg, #ff1493, #ff69b4);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(255, 20, 147, 0.4);
+      transition: all 0.3s ease;
+      font-weight: bold;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 32px rgba(255, 20, 147, 0.6);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Floating Hearts Around Input */
+    .floating-hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 30px;
+      color: #ff69b4;
+      opacity: 0.7;
+      animation: float 3s infinite ease-in-out;
+    }
+
+    .heart:nth-child(1) {
+      top: -40px;
+      left: -40px;
+      animation-delay: 0s;
+    }
+
+    .heart:nth-child(2) {
+      top: -40px;
+      right: -40px;
+      animation-delay: 0.5s;
+    }
+
+    .heart:nth-child(3) {
+      bottom: -40px;
+      left: -40px;
+      animation-delay: 1s;
+    }
+
+    .heart:nth-child(4) {
+      bottom: -40px;
+      right: -40px;
+      animation-delay: 1.5s;
+    }
+
+    .heart:nth-child(5) {
+      top: 50%;
+      left: -60px;
+      animation-delay: 2s;
+    }
+
+    .heart:nth-child(6) {
+      top: 50%;
+      right: -60px;
+      animation-delay: 2.5s;
+    }
+
+    /* Floating Animation */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-15px) rotate(10deg);
+      }
+    }
+
+    /* Rose Decoration */
+    .rose {
+      font-size: 40px;
+      margin: 0 10px;
+      display: inline-block;
+      animation: rotate 4s infinite linear;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Response Message */
+    .message {
+      margin-top: 25px;
+      color: white;
+      font-size: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      font-weight: bold;
+    }
+
+    /* Valentine's Animation Overlay */
+    .animation-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .animation-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Big Heart Animation */
+    .big-heart {
+      font-size: 150px;
+      animation: heartPulse 1s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px #ff1493);
+    }
+
+    @keyframes heartPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.3);
+      }
+    }
+
+    /* Falling Hearts */
+    .falling-heart {
+      position: absolute;
+      font-size: 40px;
+      opacity: 0;
+      animation: fall 4s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0% {
+        top: -10%;
+        opacity: 1;
+      }
+      100% {
+        top: 110%;
+        opacity: 0;
+      }
+    }
+
+    /* Success Text */
+    .success-text {
+      position: absolute;
+      bottom: 20%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 36px;
+      font-weight: bold;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        bottom: 10%;
+        opacity: 0;
+      }
+      to {
+        bottom: 20%;
+        opacity: 1;
+      }
+    }
+
+    /* Sparkles */
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkleAnim 1.5s ease-out forwards;
+    }
+
+    @keyframes sparkleAnim {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(20);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Video -->
+  <video class="video-background" autoplay muted loop playsinline>
+    <source src="feb14.mp4" type="video/mp4">
+  </video>
+  
+  <!-- Background Audio -->
+  <audio src="Idhu-Dhaan-MasssTamilan.org.mp3" autoplay loop></audio>
+
+  <!-- Centered Input with Valentine's Decoration -->
+  <div class="center-container">
+    <h1>
+      <span class="rose">🌹</span>
+      Happy Valentine's Day
+      <span class="rose">🌹</span>
+    </h1>
+    
+    <form id="messageForm">
+      <div class="input-container">
+        <!-- Floating Hearts -->
+        <div class="floating-hearts">
+          <span class="heart">❤️</span>
+          <span class="heart">💕</span>
+          <span class="heart">💖</span>
+          <span class="heart">💗</span>
+          <span class="heart">💝</span>
+          <span class="heart">💓</span>
+        </div>
+        
+        <!-- Your Name Input -->
+        <input type="text" id="nameInput" class="input-box" placeholder="Your name..." required>
+        
+        <!-- Receiver Name Input -->
+        <input type="text" id="receiverInput" class="input-box" placeholder="Receiver's name..." required>
+        
+        <!-- Message Input -->
+        <input type="text" id="messageInput" class="input-box" placeholder="Enter your message of love..." required>
+        
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="submitBtn">Send Message 💘</button>
+      </div>
+    </form>
+
+    <!-- Response Message -->
+    <div id="responseMessage" class="message"></div>
+  </div>
+
+  <!-- Valentine's Animation Overlay -->
+  <div id="animationOverlay" class="animation-overlay">
+    <div class="big-heart">❤️</div>
+  </div>
+
+  <!-- EmailJS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <script>
+    // Initialize EmailJS with your public key
+    (function() {
+      emailjs.init("RkIrCQA_bRLgrNewO");
+    })();
+
+    // Function to create falling hearts
+    function createFallingHearts() {
+      const overlay = document.getElementById('animationOverlay');
+      const hearts = ['❤️', '💕', '💖', '💗', '💝', '💓', '💘', '💞'];
+      
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'falling-heart';
+          heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          heart.style.left = Math.random() * 100 + '%';
+          heart.style.animationDelay = Math.random() * 2 + 's';
+          heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+          overlay.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 5000);
+        }, i * 100);
+      }
+    }
+
+    // Function to create sparkles
+    function createSparkles() {
+      const overlay = document.getElementById('animationOverlay');
+      
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const sparkle = document.createElement('div');
+          sparkle.className = 'sparkle';
+          sparkle.style.left = (50 + (Math.random() - 0.5) * 40) + '%';
+          sparkle.style.top = (50 + (Math.random() - 0.5) * 40) + '%';
+          sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+          overlay.appendChild(sparkle);
+          
+          setTimeout(() => sparkle.remove(), 2000);
+        }, i * 50);
+      }
+    }
+
+    // Function to show Valentine's animation
+    function showValentineAnimation(name, receiver) {
+      const overlay = document.getElementById('animationOverlay');
+      overlay.classList.add('active');
+      
+      // Add success text
+      const successText = document.createElement('div');
+      successText.className = 'success-text';
+      successText.innerHTML = `💌 Thank you ${name}! 💌<br>Your love message to ${receiver} has been sent! ✨`;
+      overlay.appendChild(successText);
+      
+      // Create falling hearts
+      createFallingHearts();
+      
+      // Create sparkles
+      createSparkles();
+      
+      // Hide animation after 4 seconds
+      setTimeout(() => {
+        overlay.classList.remove('active');
+        successText.remove();
+      }, 4000);
+    }
+
+    // Handle form submission
+    document.getElementById('messageForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const nameInput = document.getElementById('nameInput');
+      const receiverInput = document.getElementById('receiverInput');
+      const messageInput = document.getElementById('messageInput');
+      const submitBtn = document.getElementById('submitBtn');
+      const responseMessage = document.getElementById('responseMessage');
+      
+      const name = nameInput.value;
+      const receiver = receiverInput.value;
+      const message = messageInput.value;
+      
+      // Disable button while sending
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      
+      // Send email using EmailJS with correct template ID
+      emailjs.send("service_q46bqb9", "template_obns77l", {
+        title: "Valentine Message",
+        name: name,
+        receiver: receiver,
+        message: message
+      })
+      .then(function(response) {
+        // Success
+        console.log("Email sent successfully!", response);
+        
+        // Show Valentine's animation
+        showValentineAnimation(name, receiver);
+        
+        responseMessage.innerHTML = '✨ Message sent successfully! ❤️';
+        responseMessage.style.color = '#00ff00';
+        
+        // Reset form
+        nameInput.value = '';
+        receiverInput.value = '';
+        messageInput.value = '';
+        
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message 💘';
+        
+        // Clear success message after 5 seconds
+        setTimeout(function() {
+          responseMessage.innerHTML = '';
+        }, 5000);
+      }, function(error) {
+        // Error
+        console.error("Email send failed:", error);
+        responseMessage.innerHTML = '❌ Failed to send: ' + error.text;
+        responseMessage.style.color = '#ff0000';
+        
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message 💘';
+      });
+    });
+  </script>
+</body>
+</html>
