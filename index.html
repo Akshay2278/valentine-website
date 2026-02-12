@@ -299,23 +299,79 @@
         opacity: 0;
       }
     }
+
+    /* Play Button Overlay */
+    .play-button-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      cursor: pointer;
+    }
+
+    .play-button {
+      font-size: 100px;
+      color: #ff1493;
+      background: white;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 50px rgba(255, 20, 147, 0.8);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .play-text {
+      position: absolute;
+      bottom: 30%;
+      color: white;
+      font-size: 24px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
   </style>
 </head>
 <body>
+  <!-- Play Button Overlay -->
+  <div id="playButtonOverlay" class="play-button-overlay">
+    <div>
+      <div class="play-button">▶️</div>
+      <div class="play-text">Click to Start Music 🎵</div>
+    </div>
+  </div>
+
   <!-- Background Video -->
   <video class="video-background" autoplay muted loop playsinline>
     <source src="feb14.mp4" type="video/mp4">
   </video>
   
-  <!-- Background Audio -->
-  <audio src="Idhu-Dhaan-MassTamilan.org.mp3" autoplay loop></audio>
+  <!-- Background Audio (FIXED FILENAME) -->
+  <audio id="bgAudio" loop>
+    <source src="Idhu-Dhaan-MasssTamilan.org.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- Centered Input with Valentine's Decoration -->
   <div class="center-container">
     <h1>
-      <span class="rose"></span>
+      <span class="rose">🌹</span>
       Happy Valentine's Day
-      <span class="rose"></span>
+      <span class="rose">🌹</span>
     </h1>
     
     <form id="messageForm">
@@ -357,6 +413,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <script>
+    // Handle play button click to start audio
+    const playButtonOverlay = document.getElementById('playButtonOverlay');
+    const bgAudio = document.getElementById('bgAudio');
+
+    playButtonOverlay.addEventListener('click', function() {
+      bgAudio.play();
+      playButtonOverlay.style.display = 'none';
+    });
+
     // Initialize EmailJS with your public key
     (function() {
       emailjs.init("RkIrCQA_bRLgrNewO");
@@ -485,7 +550,4 @@
     });
   </script>
 </body>
-
 </html>
-
-
